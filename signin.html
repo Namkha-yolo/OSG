@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OSG - Sign In</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #FAFAFA;
+      color: #000;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.03;
+      z-index: 1;
+      pointer-events: none;
+      background-image:
+        repeating-linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000),
+        repeating-linear-gradient(-45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000);
+      background-size: 2px 2px;
+      background-position: 0 0, 1px 1px;
+    }
+    
+    .layout {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 500px;
+      padding: 2rem;
+    }
+    
+    .sign-in-container {
+      background: #fff;
+      border: 3px solid #000;
+      padding: 3rem;
+      text-align: center;
+      box-shadow: 10px 10px 0 #000;
+    }
+    
+    .logo-mark {
+      font-size: 2rem;
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      background: #000;
+      color: #FAFAFA;
+      padding: 0.5rem 1rem;
+      transform: skewX(-10deg);
+      display: inline-block;
+      margin-bottom: 2rem;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 900;
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, #FF5E00 0%, #FFB800 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .subtitle {
+      font-size: 1.2rem;
+      color: #666;
+      margin-bottom: 3rem;
+      line-height: 1.5;
+    }
+    
+    .submit-btn {
+      padding: 1.25rem 2.5rem;
+      border: 3px solid #000;
+      background: #000;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      width: 100%;
+      margin-bottom: 2rem;
+    }
+    
+    .submit-btn:hover {
+      background: #FF5E00;
+      transform: translate(-4px, -4px);
+      box-shadow: 4px 4px 0 #000;
+    }
+    
+    .submit-btn:active {
+      transform: translate(-2px, -2px);
+      box-shadow: 2px 2px 0 #000;
+    }
+    
+    .submit-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    
+    .github-icon {
+      display: inline-block;
+      margin-right: 0.5rem;
+      font-size: 1.2rem;
+    }
+    
+    .back-link {
+      color: #666;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+    
+    .back-link:hover {
+      color: #FF5E00;
+    }
+    
+    .loading {
+      display: none;
+      margin-top: 1rem;
+      color: #666;
+    }
+    
+    .error-message {
+      background: #FF5E00;
+      color: #fff;
+      padding: 1rem;
+      border: 3px solid #000;
+      margin-top: 1rem;
+      font-weight: 700;
+      display: none;
+    }
+    
+    @media (max-width: 768px) {
+      .layout {
+        padding: 1rem;
+      }
+      
+      .sign-in-container {
+        padding: 2rem;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .sign-in-container {
+      animation: fadeIn 0.6s ease-out;
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <div class="sign-in-container">
+      <div class="logo-mark">OSG</div>
+      <h1>Welcome Back</h1>
+      <p class="subtitle">Connect your GitHub account to access your gaming profile and track your open source achievements.</p>
+      
+      <button id="signInBtn" class="submit-btn">
+        <span class="github-icon">📱</span>
+        Sign In with GitHub
+      </button>
+      
+      <div id="loading" class="loading">
+        Redirecting to GitHub...
+      </div>
+      
+      <div id="errorMessage" class="error-message">
+        Sign-in failed. Please try again.
+      </div>
+      
+      <a href="index.html" class="back-link">← Back to Home</a>
+    </div>
+  </div>
+
+  <script>
+    // Supabase configuration - UPDATE THESE WITH YOUR ACTUAL VALUES
+    const SUPABASE_URL = 'https://iyllmwimbslwpedfquxa.supabase.co';
+    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml5bGxtd2ltYnNsd3BlZGZxdXhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk4NjgyNDMsImV4cCI6MjA2NTQ0NDI0M30.pKvm1kqK8Auy32wwPJcPhGqUDI9jzq8lSZvFdKpYnhg';
+    
+    // Initialize Supabase
+    const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON);
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      const signInBtn = document.getElementById('signInBtn');
+      const loading = document.getElementById('loading');
+      const errorMessage = document.getElementById('errorMessage');
+      
+      signInBtn.addEventListener('click', async function() {
+        try {
+          // Hide any previous error messages
+          errorMessage.style.display = 'none';
+          
+          // Show loading state
+          signInBtn.disabled = true;
+          signInBtn.innerHTML = '<span class="github-icon">⏳</span> Connecting...';
+          loading.style.display = 'block';
+          
+          // Get the current origin for redirect
+          const redirectUrl = window.location.origin + '/account.html';
+          
+          // Initiate GitHub OAuth
+          const { data, error } = await supabase.auth.signInWithOAuth({
+            provider: 'github',
+            options: {
+              redirectTo: redirectUrl
+            }
+          });
+          
+          if (error) {
+            throw error;
+          }
+          
+          // If we reach here without redirect, something went wrong
+          if (!data.url) {
+            throw new Error('No redirect URL received');
+          }
+          
+        } catch (error) {
+          console.error('Sign-in error:', error);
+          
+          // Show error message
+          errorMessage.style.display = 'block';
+          errorMessage.textContent = error.message || 'Sign-in failed. Please try again.';
+          
+          // Reset button state
+          signInBtn.disabled = false;
+          signInBtn.innerHTML = '<span class="github-icon">📱</span> Sign In with GitHub';
+          loading.style.display = 'none';
+        }
+      });
+      
+      // Check if user is already signed in
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (session) {
+          // User is already signed in, redirect to account page
+          window.location.href = 'account.html';
+        }
+      });
+      
+      // Listen for auth state changes
+      supabase.auth.onAuthStateChange((event, session) => {
+        if (event === 'SIGNED_IN' && session) {
+          // Successful sign-in, redirect to account page
+          window.location.href = 'account.html';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

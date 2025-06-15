@@ -4,10 +4,338 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>OSG - Coming Soon</title>
-  <link rel="stylesheet" href="css/style.css" />
-  <!-- Supabase JS Client -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
-  <script src="js/script.js" defer></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #FAFAFA;
+      color: #000;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+    
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.03;
+      z-index: 1;
+      pointer-events: none;
+      background-image:
+        repeating-linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000),
+        repeating-linear-gradient(-45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000);
+      background-size: 2px 2px;
+      background-position: 0 0, 1px 1px;
+    }
+    
+    .layout {
+      position: relative;
+      z-index: 2;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 2rem 3rem;
+      background: #FAFAFA;
+      z-index: 100;
+      border-bottom: 2px solid #000;
+    }
+    
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo-mark {
+      font-size: 1.5rem;
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      background: #000;
+      color: #FAFAFA;
+      padding: 0.5rem 1rem;
+      transform: skewX(-10deg);
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    
+    .nav-link {
+      text-decoration: none;
+      color: #000;
+      font-weight: 500;
+      position: relative;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 3px;
+      background: #FF5E00;
+      transition: width 0.3s ease;
+    }
+    
+    .nav-link:hover::after {
+      width: 100%;
+    }
+    
+    .hero {
+      margin-top: 100px;
+      padding: 4rem 3rem;
+      display: flex;
+      align-items: center;
+      flex: 1;
+    }
+    
+    .hero-content {
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+    
+    .hero-text {
+      position: relative;
+    }
+    
+    .sticker {
+      position: absolute;
+      top: -20px;
+      right: 20px;
+      background: #FF5E00;
+      color: #fff;
+      padding: 0.5rem 1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.875rem;
+      transform: rotate(-5deg);
+      box-shadow: 3px 3px 0 #000;
+    }
+    
+    .hero-title {
+      font-size: clamp(4rem, 10vw, 8rem);
+      font-weight: 900;
+      line-height: 0.9;
+      letter-spacing: -0.05em;
+      margin-bottom: 2rem;
+    }
+    
+    .hero-title .outline {
+      -webkit-text-stroke: 2px #000;
+      -webkit-text-fill-color: transparent;
+      text-stroke: 2px #000;
+      color: transparent;
+    }
+    
+    .hero-title .filled {
+      background: linear-gradient(90deg, #FF5E00 0%, #FFB800 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .tagline {
+      font-size: 1.5rem;
+      font-weight: 300;
+      margin-bottom: 2rem;
+      max-width: 500px;
+    }
+    
+    .email-form {
+      display: flex;
+      max-width: 500px;
+      box-shadow: 5px 5px 0 #000;
+    }
+    
+    .email-input {
+      flex: 1;
+      padding: 1.25rem 1.5rem;
+      font-size: 1rem;
+      border: 3px solid #000;
+      border-right: none;
+      background: #fff;
+      transition: all 0.3s ease;
+      outline: none;
+    }
+    
+    .email-input:focus {
+      background: #fff;
+    }
+    
+    .submit-btn {
+      padding: 1.25rem 2.5rem;
+      border: 3px solid #000;
+      background: #000;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+    }
+    
+    .submit-btn:hover {
+      background: #FF5E00;
+      transform: translate(-4px, -4px);
+      box-shadow: 4px 4px 0 #000;
+    }
+    
+    .submit-btn:active {
+      transform: translate(-2px, -2px);
+      box-shadow: 2px 2px 0 #000;
+    }
+    
+    .submit-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+    
+    .visual-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      transform: rotate(5deg);
+    }
+    
+    .grid-item {
+      width: 120px;
+      height: 120px;
+      border: 3px solid #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      font-weight: 900;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: #fff;
+    }
+    
+    .grid-item:nth-child(1) { background: #FFB800; }
+    .grid-item:nth-child(2) { background: #FF5E00; }
+    .grid-item:nth-child(3) { background: #000; color: #fff; }
+    .grid-item:nth-child(4) { background: #fff; }
+    .grid-item:nth-child(5) { background: #4ADE80; }
+    .grid-item:nth-child(6) { background: #FFB800; }
+    
+    .grid-item:hover {
+      transform: translate(-5px, -5px);
+      box-shadow: 5px 5px 0 #000;
+    }
+    
+    .info-section {
+      padding: 4rem 3rem;
+      background: #000;
+      color: #fff;
+    }
+    
+    .info-grid {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 3rem;
+    }
+    
+    .info-block {
+      padding: 2rem;
+      border: 3px solid #fff;
+      background: #000;
+      transition: all 0.3s ease;
+    }
+    
+    .info-block:hover {
+      background: #FF5E00;
+      transform: translate(-5px, -5px);
+      box-shadow: 5px 5px 0 #fff;
+    }
+    
+    .info-number {
+      font-size: 3rem;
+      font-weight: 900;
+      color: #FFB800;
+      margin-bottom: 1rem;
+    }
+    
+    .info-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    
+    .info-desc {
+      font-size: 1rem;
+      line-height: 1.6;
+      opacity: 0.9;
+    }
+    
+    .footer {
+      padding: 3rem;
+      background: #FAFAFA;
+      border-top: 3px solid #000;
+      text-align: center;
+    }
+    
+    .social-links {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+    
+    .footer-text {
+      color: #666;
+      font-size: 0.875rem;
+    }
+    
+    /* Remove modal styles - no longer needed */
+    .success-message {
+      background: #4ADE80;
+      color: #000;
+      padding: 1rem;
+      border: 3px solid #000;
+      margin-top: 1rem;
+      font-weight: 700;
+      display: none;
+    }
+    
+    .error-message {
+      background: #FF5E00;
+      color: #fff;
+      padding: 1rem;
+      border: 3px solid #000;
+      margin-top: 1rem;
+      font-weight: 700;
+      display: none;
+    }
+  </style>
 </head>
 <body>
   <div class="layout">
@@ -17,12 +345,12 @@
         <ul class="nav-links">
           <li><a href="index.html" class="nav-link">Home</a></li>
           <li><a href="signin.html" class="nav-link">Sign In</a></li>
-          <li><a href="#" class="nav-link">Contact</a></li>
+          <li><a href="#" class="nav-link" onclick="scrollToSection('footer')">Contact</a></li>
         </ul>
       </nav>
     </header>
 
-    <section class="hero">
+    <section class="hero" id="hero">
       <div class="hero-content">
         <div class="hero-text">
           <div class="sticker">Beta 2025</div>
@@ -38,6 +366,8 @@
               <input type="email" id="emailInput" class="email-input" placeholder="your@email.com" required />
               <button type="submit" class="submit-btn">Join</button>
             </form>
+            <div id="successMessage" class="success-message">✓ Thank you! We'll be in touch soon.</div>
+            <div id="errorMessage" class="error-message">Submission failed. Please try again.</div>
           </div>
         </div>
 
@@ -74,12 +404,85 @@
       </div>
     </section>
 
-    <footer class="footer">
+    <footer class="footer" id="footer">
       <div class="social-links">
-        <!-- SVG icons here -->
+        <!-- Social icons would go here -->
       </div>
       <p class="footer-text">© 2025 OSG. Building the future of open source.</p>
     </footer>
   </div>
+
+  <!-- Remove the modal and modal functions -->
+  <script>
+    // Email form submission with proper redirect to thank-you page
+    document.getElementById('emailForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const emailInput = document.getElementById('emailInput');
+      const submitBtn = this.querySelector('.submit-btn');
+      const successMsg = document.getElementById('successMessage');
+      const errorMsg = document.getElementById('errorMessage');
+      
+      // Hide previous messages
+      successMsg.style.display = 'none';
+      errorMsg.style.display = 'none';
+      
+      // Update button state
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Joining...';
+      
+      try {
+        // Replace with your actual Google Apps Script URL
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzAkbfsKcR-urDVWZPGcVXPgRUJgDukCJjxNlkx8_sPz52OqlOAGJnh0YAGoTPjgzgM/exec';
+        
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            email: emailInput.value, 
+            source: 'OSG Landing Page' 
+          })
+        });
+        
+        // Redirect to thank you page
+        window.location.href = 'thank-you.html';
+        
+      } catch (error) {
+        console.error('Error:', error);
+        errorMsg.style.display = 'block';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Join';
+      }
+    });
+
+    // Grid item animations
+    document.querySelectorAll('.grid-item').forEach(item => {
+      item.addEventListener('click', function() {
+        this.style.transform = 'rotate(360deg) scale(1.2)';
+        setTimeout(() => {
+          this.style.transform = '';
+        }, 500);
+      });
+    });
+
+    // Smooth scrolling
+    function scrollToSection(sectionId) {
+      const element = document.getElementById(sectionId) || document.querySelector(`.${sectionId}`);
+      if (element) {
+        element.scrollIntoView({
+          behavior: 'smooth'
+        });
+      }
+    }
+
+    // Simple form validation enhancement
+    document.getElementById('emailInput').addEventListener('input', function() {
+      const successMsg = document.getElementById('successMessage');
+      const errorMsg = document.getElementById('errorMessage');
+      successMsg.style.display = 'none';
+      errorMsg.style.display = 'none';
+    });
+  </script>
 </body>
 </html>

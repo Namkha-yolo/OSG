@@ -3,16 +3,319 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Thank You</title>
-  <link rel="stylesheet" href="css/style.css" />
+  <title>OSG - Thank You!</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #FAFAFA;
+      color: #000;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.03;
+      z-index: 1;
+      pointer-events: none;
+      background-image:
+        repeating-linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000),
+        repeating-linear-gradient(-45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000);
+      background-size: 2px 2px;
+      background-position: 0 0, 1px 1px;
+    }
+    
+    .layout {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 600px;
+      padding: 2rem;
+    }
+    
+    .thank-you-container {
+      background: #fff;
+      border: 3px solid #000;
+      padding: 4rem;
+      text-align: center;
+      box-shadow: 10px 10px 0 #000;
+    }
+    
+    .logo-mark {
+      font-size: 2rem;
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      background: #000;
+      color: #FAFAFA;
+      padding: 0.5rem 1rem;
+      transform: skewX(-10deg);
+      display: inline-block;
+      margin-bottom: 2rem;
+    }
+    
+    .success-icon {
+      font-size: 4rem;
+      color: #4ADE80;
+      margin-bottom: 1rem;
+      display: block;
+    }
+    
+    h1 {
+      font-size: 3rem;
+      font-weight: 900;
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, #FF5E00 0%, #FFB800 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .subtitle {
+      font-size: 1.3rem;
+      color: #666;
+      margin-bottom: 3rem;
+      line-height: 1.5;
+    }
+    
+    .next-steps {
+      background: #f8f9fa;
+      border: 2px solid #000;
+      padding: 2rem;
+      margin: 2rem 0;
+      text-align: left;
+    }
+    
+    .next-steps h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: #000;
+    }
+    
+    .next-steps ul {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .next-steps li {
+      padding: 0.5rem 0;
+      position: relative;
+      padding-left: 2rem;
+    }
+    
+    .next-steps li::before {
+      content: '🎮';
+      position: absolute;
+      left: 0;
+      top: 0.5rem;
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+    
+    .btn {
+      padding: 1.25rem 2.5rem;
+      border: 3px solid #000;
+      background: #000;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+    }
+    
+    .btn:hover {
+      background: #FF5E00;
+      transform: translate(-4px, -4px);
+      box-shadow: 4px 4px 0 #000;
+    }
+    
+    .btn-secondary {
+      background: #fff;
+      color: #000;
+    }
+    
+    .btn-secondary:hover {
+      background: #FFB800;
+    }
+    
+    .social-share {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 2px solid #eee;
+    }
+    
+    .social-share h4 {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      color: #666;
+    }
+    
+    .social-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .social-btn {
+      padding: 0.75rem 1.5rem;
+      border: 2px solid #000;
+      background: #fff;
+      color: #000;
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    
+    .social-btn:hover {
+      background: #000;
+      color: #fff;
+      transform: translate(-2px, -2px);
+      box-shadow: 2px 2px 0 #666;
+    }
+    
+    @media (max-width: 768px) {
+      .layout {
+        padding: 1rem;
+      }
+      
+      .thank-you-container {
+        padding: 2rem;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .button-group {
+        flex-direction: column;
+      }
+      
+      .social-buttons {
+        flex-direction: column;
+      }
+    }
+    
+    @keyframes bounceIn {
+      0% { opacity: 0; transform: scale(0.3) translateY(50px); }
+      50% { opacity: 1; transform: scale(1.05); }
+      70% { transform: scale(0.9); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .thank-you-container {
+      animation: bounceIn 0.8s ease-out;
+    }
+    
+    .next-steps {
+      animation: slideUp 0.6s ease-out 0.3s both;
+    }
+    
+    .button-group {
+      animation: slideUp 0.6s ease-out 0.5s both;
+    }
+  </style>
 </head>
 <body>
   <div class="layout">
-    <section class="hero">
-      <h1>✓ Thank You!</h1>
-      <p>We've received your email and will be in touch soon.</p>
-      <a href="index.html" class="submit-btn">Return Home</a>
-    </section>
+    <div class="thank-you-container">
+      <div class="logo-mark">OSG</div>
+      <span class="success-icon">✓</span>
+      <h1>Thank You!</h1>
+      <p class="subtitle">You're now on the list! We'll keep you updated on OSG's launch and send you early access when it's ready.</p>
+      
+      <div class="next-steps">
+        <h3>What happens next?</h3>
+        <ul>
+          <li>You'll receive a confirmation email shortly</li>
+          <li>We'll send updates on our development progress</li>
+          <li>You'll get early access before the public launch</li>
+          <li>Be among the first to gamify your open source contributions</li>
+        </ul>
+      </div>
+      
+      <div class="button-group">
+        <a href="index.html" class="btn">Return Home</a>
+        <a href="signin.html" class="btn btn-secondary">Create Account</a>
+      </div>
+      
+      <div class="social-share">
+        <h4>Help us spread the word:</h4>
+        <div class="social-buttons">
+          <a href="#" class="social-btn" onclick="shareOnTwitter()">Share on Twitter</a>
+          <a href="#" class="social-btn" onclick="shareOnLinkedIn()">Share on LinkedIn</a>
+          <a href="#" class="social-btn" onclick="copyLink()">Copy Link</a>
+        </div>
+      </div>
+    </div>
   </div>
+
+  <script>
+    // Social sharing functions
+    function shareOnTwitter() {
+      const text = "I just signed up for OSG - turning code commits into gaming achievements! Can't wait for this to launch. 🎮⚡";
+      const url = window.location.origin;
+      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
+    }
+    
+    function shareOnLinkedIn() {
+      const url = window.location.origin;
+      const title = "OSG - Open Source Gaming";
+      const summary = "Gamify your open source contributions with OSG";
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank');
+    }
+    
+    function copyLink() {
+      const url = window.location.origin;
+      navigator.clipboard.writeText(url).then(() => {
+        // Temporarily change button text
+        const btn = event.target;
+        const originalText = btn.textContent;
+        btn.textContent = 'Copied!';
+        btn.style.background = '#4ADE80';
+        
+        setTimeout(() => {
+          btn.textContent = originalText;
+          btn.style.background = '';
+        }, 2000);
+      }).catch(() => {
+        // Fallback for older browsers
+        alert(`Copy this link: ${url}`);
+      });
+    }
+    
+    // Optional: Auto-redirect after some time
+    // setTimeout(() => {
+    //   window.location.href = 'index.html';
+    // }, 10000); // Redirect after 10 seconds
+  </script>
 </body>
 </html>
