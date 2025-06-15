@@ -1,19 +1,93 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0"
-    />
-    <title>OSG Auth</title>
-    <!-- Tailwind + custom styles -->
-    <link rel="stylesheet" href="/src/index.css" />
-  </head>
-  <body>
-    <!-- Your React app will mount here -->
-    <div id="root"></div>
-    <!-- Vite will inject the compiled script here -->
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OSG - Coming Soon</title>
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Supabase JS Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
+  <script src="js/script.js" defer></script>
+</head>
+<body>
+  <div class="layout">
+    <header class="header">
+      <nav class="nav">
+        <div class="logo-mark">OSG</div>
+        <ul class="nav-links">
+          <li><a href="#" class="nav-link">About</a></li>
+          <li><a href="#" class="nav-link">Features</a></li>
+          <li><a href="#" class="nav-link">Contact</a></li>
+          <li><a href="#" id="signInBtn" class="nav-link">Sign In</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="hero-content">
+        <div class="hero-text">
+          <div class="sticker">Beta 2025</div>
+          <h1 class="hero-title">
+            <span class="outline">OPEN</span>
+            <span class="filled">SOURCE</span>
+            <span class="outline">GAMING</span>
+          </h1>
+          <p class="tagline">
+            Turn your code commits into achievements. Make open source contribution as addictive as your favorite game.
+          </p>
+
+          <div class="email-section">
+            <label class="email-label">Get Early Access →</label>
+            <form class="email-form" id="emailForm">
+              <input type="email" class="email-input" placeholder="your@email.com" required id="emailInput">
+              <button type="submit" class="submit-btn">Join</button>
+            </form>
+            <div class="success-message" id="successMessage">
+              ✓ You're in! We'll be in touch soon.
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="visual-grid">
+            <div class="grid-item">⚡</div>
+            <div class="grid-item">🎮</div>
+            <div class="grid-item">{ }</div>
+            <div class="grid-item">🏆</div>
+            <div class="grid-item">🚀</div>
+            <div class="grid-item">💎</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="info-section">
+      <div class="info-grid">
+        <div class="info-block">
+          <div class="info-number">01</div>
+          <h3 class="info-title">Level System</h3>
+          <p class="info-desc">Every commit, PR, and review earns XP. Watch your developer level grow with each contribution.</p>
+        </div>
+        <div class="info-block">
+          <div class="info-number">02</div>
+          <h3 class="info-title">Achievements</h3>
+          <p class="info-desc">Unlock rare badges for mastering languages, maintaining streaks, and helping others.</p>
+        </div>
+        <div class="info-block">
+          <div class="info-number">03</div>
+          <h3 class="info-title">Leaderboards</h3>
+          <p class="info-desc">Compete globally or within your team. See who's crushing it this week.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="social-links">
+        <!-- SVG icons omitted for brevity -->
+      </div>
+      <p class="footer-text">© 2025 OSG. Building the future of open source.</p>
+    </footer>
+  </div>
+</body>
 </html>
