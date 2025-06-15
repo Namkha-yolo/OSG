@@ -1,11 +1,10 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>OSG - Coming Soon</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css" />
   <!-- Supabase JS Client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
   <script src="js/script.js" defer></script>
@@ -16,10 +15,9 @@
       <nav class="nav">
         <div class="logo-mark">OSG</div>
         <ul class="nav-links">
-          <li><a href="#" class="nav-link">About</a></li>
-          <li><a href="#" class="nav-link">Features</a></li>
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="signin.html" class="nav-link">Sign In</a></li>
           <li><a href="#" class="nav-link">Contact</a></li>
-          <li><a href="#" id="signInBtn" class="nav-link">Sign In</a></li>
         </ul>
       </nav>
     </header>
@@ -33,19 +31,13 @@
             <span class="filled">SOURCE</span>
             <span class="outline">GAMING</span>
           </h1>
-          <p class="tagline">
-            Turn your code commits into achievements. Make open source contribution as addictive as your favorite game.
-          </p>
+          <p class="tagline">Turn your code commits into achievements. Make open source contribution as addictive as your favorite game.</p>
 
           <div class="email-section">
-            <label class="email-label">Get Early Access →</label>
-            <form class="email-form" id="emailForm">
-              <input type="email" class="email-input" placeholder="your@email.com" required id="emailInput">
+            <form id="emailForm" class="email-form">
+              <input type="email" id="emailInput" class="email-input" placeholder="your@email.com" required />
               <button type="submit" class="submit-btn">Join</button>
             </form>
-            <div class="success-message" id="successMessage">
-              ✓ You're in! We'll be in touch soon.
-            </div>
           </div>
         </div>
 
@@ -84,7 +76,7 @@
 
     <footer class="footer">
       <div class="social-links">
-        <!-- SVG icons omitted for brevity -->
+        <!-- SVG icons here -->
       </div>
       <p class="footer-text">© 2025 OSG. Building the future of open source.</p>
     </footer>
