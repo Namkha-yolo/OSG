@@ -4,83 +4,423 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>OSG - Sign In</title>
-
-  <!-- 1) Load the Supabase UMD bundle with defer -->
-  <script
-    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"
-    defer
-  ></script>
-
+  <!-- Try ES6 modules approach -->
+  <script type="module">
+    // Import Supabase using ES6 modules
+    import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js@2';
+    
+    // Make it globally available
+    window.createSupabaseClient = createClient;
+    window.supabaseLoaded = true;
+    
+    // Dispatch event when loaded
+    window.dispatchEvent(new CustomEvent('supabaseReady'));
+  </script>
+  
+  <!-- Fallback for browsers that don't support ES6 modules -->
+  <script nomodule src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <style>
-    /* (your existing CSS here, unchanged) */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #FAFAFA;
+      color: #000;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+    
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.03;
+      z-index: 1;
+      pointer-events: none;
+      background-image:
+        repeating-linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000),
+        repeating-linear-gradient(-45deg, #000 25%, transparent 25%, transparent 75%, #000 75%, #000);
+      background-size: 2px 2px;
+      background-position: 0 0, 1px 1px;
+    }
+    
+    .layout {
+      position: relative;
+      z-index: 2;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    
+    .sign-in-container {
+      max-width: 500px;
+      width: 100%;
+      background: #fff;
+      border: 4px solid #000;
+      padding: 3rem;
+      box-shadow: 8px 8px 0 #000;
+      text-align: center;
+      position: relative;
+    }
+    
+    .logo-mark {
+      font-size: 2rem;
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      background: #000;
+      color: #FAFAFA;
+      padding: 0.75rem 1.5rem;
+      transform: skewX(-10deg);
+      display: inline-block;
+      margin-bottom: 2rem;
+      border: 3px solid #000;
+    }
+    
+    .sign-in-container h1 {
+      font-size: 2.5rem;
+      font-weight: 900;
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, #FF5E00 0%, #FFB800 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .subtitle {
+      font-size: 1.1rem;
+      color: #666;
+      margin-bottom: 2.5rem;
+      line-height: 1.6;
+    }
+    
+    .submit-btn {
+      width: 100%;
+      padding: 1.5rem 2rem;
+      border: 3px solid #000;
+      background: #000;
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 5px 5px 0 #FF5E00;
+    }
+    
+    .submit-btn:hover:not(:disabled) {
+      background: #FF5E00;
+      transform: translate(-3px, -3px);
+      box-shadow: 8px 8px 0 #000;
+    }
+    
+    .submit-btn:active:not(:disabled) {
+      transform: translate(-1px, -1px);
+      box-shadow: 3px 3px 0 #000;
+    }
+    
+    .submit-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .github-icon {
+      font-size: 1.3rem;
+    }
+    
+    .loading {
+      background: #4ADE80;
+      color: #000;
+      padding: 1rem;
+      border: 3px solid #000;
+      margin-bottom: 1.5rem;
+      font-weight: 700;
+      display: none;
+      position: relative;
+    }
+    
+    .loading::before {
+      content: '';
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      border: 2px solid #000;
+      border-top: 2px solid transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: translateY(-50%) rotate(0deg); }
+      100% { transform: translateY(-50%) rotate(360deg); }
+    }
+    
+    .error-message {
+      background: #FF5E00;
+      color: #fff;
+      padding: 1rem;
+      border: 3px solid #000;
+      margin-bottom: 1.5rem;
+      font-weight: 700;
+      display: none;
+    }
+    
+    .back-link {
+      text-decoration: none;
+      color: #666;
+      font-weight: 500;
+      position: relative;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .back-link::after {
+      content: '';
+      position: absolute;
+      bottom: -3px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #FF5E00;
+      transition: width 0.3s ease;
+    }
+    
+    .back-link:hover {
+      color: #000;
+    }
+    
+    .back-link:hover::after {
+      width: 100%;
+    }
+    
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin: 2rem 0;
+      padding: 1.5rem;
+      background: #f8f9fa;
+      border: 2px solid #000;
+    }
+    
+    .feature-item {
+      text-align: center;
+      padding: 1rem;
+    }
+    
+    .feature-icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+    
+    .feature-text {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #333;
+    }
+    
+    .security-badge {
+      position: absolute;
+      top: -15px;
+      right: 20px;
+      background: #4ADE80;
+      color: #000;
+      padding: 0.5rem 1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.875rem;
+      transform: rotate(-3deg);
+      box-shadow: 3px 3px 0 #000;
+      border: 2px solid #000;
+    }
+    
+    @media (max-width: 768px) {
+      .layout {
+        padding: 1rem;
+      }
+      
+      .sign-in-container {
+        padding: 2rem;
+      }
+      
+      .sign-in-container h1 {
+        font-size: 2rem;
+      }
+      
+      .features-grid {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+      }
+      
+      .feature-item {
+        padding: 0.5rem;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="layout">
     <div class="sign-in-container">
+      <div class="security-badge">Secure</div>
       <div class="logo-mark">OSG</div>
       <h1>Welcome Back</h1>
       <p class="subtitle">
         Connect your GitHub account to access your gaming profile and track
         your open source achievements.
       </p>
-
+      
+      <div class="features-grid">
+        <div class="feature-item">
+          <span class="feature-icon">🏆</span>
+          <div class="feature-text">Track Achievements</div>
+        </div>
+        <div class="feature-item">
+          <span class="feature-icon">📊</span>
+          <div class="feature-text">View Stats</div>
+        </div>
+        <div class="feature-item">
+          <span class="feature-icon">🚀</span>
+          <div class="feature-text">Level Up</div>
+        </div>
+      </div>
+      
       <button id="signInBtn" class="submit-btn">
         <span class="github-icon">📱</span>
         Sign In with GitHub
       </button>
-
-      <div id="loading" class="loading">Redirecting to GitHub...</div>
+      
+      <div id="loading" class="loading">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Redirecting to GitHub...
+      </div>
+      
       <div id="errorMessage" class="error-message">
         Sign-in failed. Please try again.
       </div>
+      
       <a href="index.html" class="back-link">← Back to Home</a>
     </div>
   </div>
-
+  
   <script>
-    // 2) Your real Supabase URL and anon key
+    // Your real Supabase URL and anon key
     const SUPABASE_URL = 'https://iyllmwimbslwpedfquxa.supabase.co';
     const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml5bGxtd2ltYnNsd3BlZGZxdXhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk4NjgyNDMsImV4cCI6MjA2NTQ0NDI0M30.pKvm1kqK8Auy32wwPJcPhGqUDI9jzq8lSZvFdKpYnhg';
-
-    // 3) Wait until both DOM and the UMD bundle have loaded
-    window.addEventListener('DOMContentLoaded', () => {
-      if (typeof supabase === 'undefined') {
-        // If the CDN script never loaded or was blocked
-        const err = document.getElementById('errorMessage');
-        err.textContent =
-          'Authentication library failed to load. Please refresh.';
-        err.style.display = 'block';
-        return;
-      }
-
-      // 4) Initialize the client
-      const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
-
+    
+    // Enhanced loading with multiple strategies
+    function initializeSupabase() {
       const btn = document.getElementById('signInBtn');
       const loading = document.getElementById('loading');
       const errMsg = document.getElementById('errorMessage');
+      
+      // Strategy 1: Check if ES6 module loaded
+      if (window.supabaseLoaded && window.createSupabaseClient) {
+        initApp(window.createSupabaseClient);
+        return;
+      }
+      
+      // Strategy 2: Check if UMD bundle loaded
+      if (typeof supabase !== 'undefined') {
+        initApp(supabase.createClient);
+        return;
+      }
+      
+      // Strategy 3: Try manual fetch of Supabase
+      loadSupabaseManually()
+        .then(createClient => {
+          if (createClient) {
+            initApp(createClient);
+          } else {
+            showFallbackOptions();
+          }
+        })
+        .catch(() => {
+          showFallbackOptions();
+        });
+    }
+    
+    async function loadSupabaseManually() {
+      try {
+        // Try to load via dynamic import
+        const module = await import('https://cdn.skypack.dev/@supabase/supabase-js@2');
+        return module.createClient;
+      } catch (e) {
+        console.warn('Dynamic import failed:', e);
+        return null;
+      }
+    }
+    
+    function showFallbackOptions() {
+      const errMsg = document.getElementById('errorMessage');
+      const btn = document.getElementById('signInBtn');
+      
+      errMsg.innerHTML = `
+        <strong>Authentication temporarily unavailable.</strong><br>
+        <small>Try one of these options:</small><br>
+        • Refresh the page<br>
+        • Check your internet connection<br>
+        • Try a different browser<br>
+        • <a href="mailto:support@yourdomain.com" style="color: #fff; text-decoration: underline;">Contact support</a>
+      `;
+      errMsg.style.display = 'block';
+      
+      // Change button to show alternative
+      btn.innerHTML = '<span class="github-icon">🔄</span> Retry Connection';
+      btn.disabled = false;
+      btn.onclick = () => {
+        location.reload();
+      };
+    }
 
+    function initApp(createClient) {
+      const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
+      const btn = document.getElementById('signInBtn');
+      const loading = document.getElementById('loading');
+      const errMsg = document.getElementById('errorMessage');
+      
+      // Hide any error messages since we successfully loaded
+      errMsg.style.display = 'none';
+      
       btn.addEventListener('click', async () => {
         errMsg.style.display = 'none';
         btn.disabled = true;
         btn.innerHTML = '<span class="github-icon">⏳</span> Connecting...';
         loading.style.display = 'block';
-
+        
         try {
-          // 5) Kick off OAuth
-          await sb.auth.signInWithOAuth({
+          // Kick off OAuth
+          const { error } = await sb.auth.signInWithOAuth({
             provider: 'github',
             options: {
               redirectTo: window.location.origin + '/account.html'
             }
           });
+          
+          if (error) {
+            throw error;
+          }
           // (Supabase will redirect for you)
         } catch (err) {
           console.error('OAuth error', err);
           errMsg.textContent =
             err.message ||
-            'Sign-in failed. Check your Supabase GitHub settings.';
+            'Sign-in failed. Please check your Supabase GitHub configuration.';
           errMsg.style.display = 'block';
           btn.disabled = false;
           btn.innerHTML =
@@ -88,15 +428,38 @@
           loading.style.display = 'none';
         }
       });
-
-      // 6) If they’re already logged in, bounce them to account.html
+      
+      // If they're already logged in, bounce them to account.html
       sb.auth.getSession().then(({ data: { session } }) => {
-        if (session) window.location.href = '/account.html';
+        if (session) {
+          window.location.href = '/account.html';
+        }
       });
+      
       sb.auth.onAuthStateChange((_, session) => {
-        if (session) window.location.href = '/account.html';
+        if (session) {
+          window.location.href = '/account.html';
+        }
       });
-    });
+    }
+
+    // Wait for DOM and try multiple loading strategies
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializeSupabase);
+    } else {
+      initializeSupabase();
+    }
+    
+    // Listen for ES6 module loading
+    window.addEventListener('supabaseReady', initializeSupabase);
+    
+    // Fallback timeout
+    setTimeout(() => {
+      if (!window.supabaseInitialized) {
+        initializeSupabase();
+      }
+    }, 3000);
+  </script>
   </script>
 </body>
 </html>
