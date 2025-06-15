@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OSG - Your Account</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
+  <title>OSG - Thank You!</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     
@@ -14,6 +13,9 @@
       color: #000;
       overflow-x: hidden;
       min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     
     body::before {
@@ -36,57 +38,39 @@
     .layout {
       position: relative;
       z-index: 2;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      width: 100%;
+      max-width: 600px;
+      padding: 2rem;
     }
     
-    .header {
-      padding: 2rem 3rem;
-      background: #FAFAFA;
-      border-bottom: 3px solid #000;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .thank-you-container {
+      background: #fff;
+      border: 3px solid #000;
+      padding: 4rem;
+      text-align: center;
+      box-shadow: 10px 10px 0 #000;
     }
     
     .logo-mark {
-      font-size: 1.5rem;
+      font-size: 2rem;
       font-weight: 900;
       letter-spacing: -0.05em;
       background: #000;
       color: #FAFAFA;
       padding: 0.5rem 1rem;
       transform: skewX(-10deg);
+      display: inline-block;
+      margin-bottom: 2rem;
     }
     
-    .user-info {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
+    .success-icon {
+      font-size: 4rem;
+      color: #4ADE80;
+      margin-bottom: 1rem;
+      display: block;
     }
     
-    .avatar {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      border: 3px solid #000;
-    }
-    
-    .main-content {
-      flex: 1;
-      padding: 4rem 3rem;
-      max-width: 1200px;
-      margin: 0 auto;
-      width: 100%;
-    }
-    
-    .welcome-section {
-      text-align: center;
-      margin-bottom: 4rem;
-    }
-    
-    .welcome-title {
+    h1 {
       font-size: 3rem;
       font-weight: 900;
       margin-bottom: 1rem;
@@ -97,70 +81,56 @@
       color: transparent;
     }
     
-    .welcome-subtitle {
-      font-size: 1.2rem;
+    .subtitle {
+      font-size: 1.3rem;
       color: #666;
-      margin-bottom: 2rem;
+      margin-bottom: 3rem;
+      line-height: 1.5;
     }
     
-    .status-badge {
-      background: #4ADE80;
-      color: #000;
-      padding: 0.5rem 1rem;
-      border: 3px solid #000;
-      font-weight: 700;
-      text-transform: uppercase;
-      display: inline-block;
-    }
-    
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
-      margin-top: 3rem;
-    }
-    
-    .dashboard-card {
-      background: #fff;
-      border: 3px solid #000;
+    .next-steps {
+      background: #f8f9fa;
+      border: 2px solid #000;
       padding: 2rem;
-      transition: all 0.3s ease;
+      margin: 2rem 0;
+      text-align: left;
     }
     
-    .dashboard-card:hover {
-      transform: translate(-5px, -5px);
-      box-shadow: 5px 5px 0 #000;
-    }
-    
-    .card-title {
-      font-size: 1.5rem;
+    .next-steps h3 {
+      font-size: 1.2rem;
       font-weight: 700;
       margin-bottom: 1rem;
-      color: #FF5E00;
-    }
-    
-    .card-content {
-      font-size: 1rem;
-      line-height: 1.6;
-      color: #666;
-    }
-    
-    .stat-number {
-      font-size: 3rem;
-      font-weight: 900;
       color: #000;
-      margin-bottom: 0.5rem;
+    }
+    
+    .next-steps ul {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .next-steps li {
+      padding: 0.5rem 0;
+      position: relative;
+      padding-left: 2rem;
+    }
+    
+    .next-steps li::before {
+      content: '🎮';
+      position: absolute;
+      left: 0;
+      top: 0.5rem;
     }
     
     .button-group {
       display: flex;
       gap: 1rem;
       flex-wrap: wrap;
+      justify-content: center;
       margin-top: 2rem;
     }
     
     .btn {
-      padding: 1rem 2rem;
+      padding: 1.25rem 2.5rem;
       border: 3px solid #000;
       background: #000;
       color: #fff;
@@ -177,8 +147,8 @@
     
     .btn:hover {
       background: #FF5E00;
-      transform: translate(-3px, -3px);
-      box-shadow: 3px 3px 0 #000;
+      transform: translate(-4px, -4px);
+      box-shadow: 4px 4px 0 #000;
     }
     
     .btn-secondary {
@@ -190,196 +160,162 @@
       background: #FFB800;
     }
     
-    .loading {
-      text-align: center;
-      padding: 4rem;
-      font-size: 1.2rem;
+    .social-share {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 2px solid #eee;
+    }
+    
+    .social-share h4 {
+      font-size: 1rem;
+      margin-bottom: 1rem;
       color: #666;
     }
     
+    .social-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .social-btn {
+      padding: 0.75rem 1.5rem;
+      border: 2px solid #000;
+      background: #fff;
+      color: #000;
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    
+    .social-btn:hover {
+      background: #000;
+      color: #fff;
+      transform: translate(-2px, -2px);
+      box-shadow: 2px 2px 0 #666;
+    }
+    
     @media (max-width: 768px) {
-      .header {
-        padding: 1rem 2rem;
-        flex-direction: column;
-        gap: 1rem;
+      .layout {
+        padding: 1rem;
       }
       
-      .main-content {
+      .thank-you-container {
         padding: 2rem;
       }
       
-      .welcome-title {
+      h1 {
         font-size: 2rem;
-      }
-      
-      .dashboard-grid {
-        grid-template-columns: 1fr;
       }
       
       .button-group {
         flex-direction: column;
       }
+      
+      .social-buttons {
+        flex-direction: column;
+      }
     }
     
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
+    @keyframes bounceIn {
+      0% { opacity: 0; transform: scale(0.3) translateY(50px); }
+      50% { opacity: 1; transform: scale(1.05); }
+      70% { transform: scale(0.9); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
     }
     
-    .welcome-section,
-    .dashboard-card {
-      animation: fadeIn 0.6s ease-out;
+    .thank-you-container {
+      animation: bounceIn 0.8s ease-out;
     }
     
-    .dashboard-card:nth-child(1) { animation-delay: 0.1s; }
-    .dashboard-card:nth-child(2) { animation-delay: 0.2s; }
-    .dashboard-card:nth-child(3) { animation-delay: 0.3s; }
+    .next-steps {
+      animation: slideUp 0.6s ease-out 0.3s both;
+    }
+    
+    .button-group {
+      animation: slideUp 0.6s ease-out 0.5s both;
+    }
   </style>
 </head>
 <body>
   <div class="layout">
-    <header class="header">
+    <div class="thank-you-container">
       <div class="logo-mark">OSG</div>
-      <div class="user-info">
-        <img id="userAvatar" class="avatar" src="" alt="User Avatar" style="display: none;">
-        <span id="userName">Loading...</span>
-        <button id="signOutBtn" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">Sign Out</button>
-      </div>
-    </header>
-
-    <main class="main-content">
-      <div id="loadingState" class="loading">
-        Loading your gaming profile...
+      <span class="success-icon">✓</span>
+      <h1>Thank You!</h1>
+      <p class="subtitle">You're now on the list! We'll keep you updated on OSG's launch and send you early access when it's ready.</p>
+      
+      <div class="next-steps">
+        <h3>What happens next?</h3>
+        <ul>
+          <li>You'll receive a confirmation email shortly</li>
+          <li>We'll send updates on our development progress</li>
+          <li>You'll get early access before the public launch</li>
+          <li>Be among the first to gamify your open source contributions</li>
+        </ul>
       </div>
       
-      <div id="accountContent" style="display: none;">
-        <section class="welcome-section">
-          <h1 class="welcome-title">Welcome to OSG!</h1>
-          <p class="welcome-subtitle">Your open source gaming journey starts here.</p>
-          <div class="status-badge">Account Active</div>
-        </section>
-
-        <div class="dashboard-grid">
-          <div class="dashboard-card">
-            <h2 class="card-title">Your Level</h2>
-            <div class="stat-number">1</div>
-            <div class="card-content">
-              You're just getting started! Complete your first commit to level up.
-            </div>
-          </div>
-
-          <div class="dashboard-card">
-            <h2 class="card-title">Achievements</h2>
-            <div class="stat-number">0</div>
-            <div class="card-content">
-              Unlock your first achievement by making a contribution to an open source project.
-            </div>
-          </div>
-
-          <div class="dashboard-card">
-            <h2 class="card-title">Connected Repos</h2>
-            <div class="stat-number">0</div>
-            <div class="card-content">
-              Connect your GitHub repositories to start tracking your contributions.
-            </div>
-          </div>
-        </div>
-
-        <div class="button-group">
-          <a href="#" class="btn">Connect GitHub Repos</a>
-          <a href="#" class="btn btn-secondary">View Leaderboard</a>
-          <a href="index.html" class="btn btn-secondary">Back to Home</a>
+      <div class="button-group">
+        <a href="index.html" class="btn">Return Home</a>
+        <a href="signin.html" class="btn btn-secondary">Create Account</a>
+      </div>
+      
+      <div class="social-share">
+        <h4>Help us spread the word:</h4>
+        <div class="social-buttons">
+          <a href="#" class="social-btn" onclick="shareOnTwitter()">Share on Twitter</a>
+          <a href="#" class="social-btn" onclick="shareOnLinkedIn()">Share on LinkedIn</a>
+          <a href="#" class="social-btn" onclick="copyLink()">Copy Link</a>
         </div>
       </div>
-    </main>
+    </div>
   </div>
 
   <script>
-    // Supabase configuration - UPDATE THESE WITH YOUR ACTUAL VALUES
-    const SUPABASE_URL = 'https://iyllmwimbslwpedfquxa.supabase.co';
-    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml5bGxtd2ltYnNsd3BlZGZxdXhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk4NjgyNDMsImV4cCI6MjA2NTQ0NDI0M30.pKvm1kqK8Auy32wwPJcPhGqUDI9jzq8lSZvFdKpYnhg';
+    // Social sharing functions
+    function shareOnTwitter() {
+      const text = "I just signed up for OSG - turning code commits into gaming achievements! Can't wait for this to launch. 🎮⚡";
+      const url = window.location.origin;
+      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
+    }
     
-    // Initialize Supabase
-    const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON);
+    function shareOnLinkedIn() {
+      const url = window.location.origin;
+      const title = "OSG - Open Source Gaming";
+      const summary = "Gamify your open source contributions with OSG";
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank');
+    }
     
-    document.addEventListener('DOMContentLoaded', async function() {
-      const loadingState = document.getElementById('loadingState');
-      const accountContent = document.getElementById('accountContent');
-      const userName = document.getElementById('userName');
-      const userAvatar = document.getElementById('userAvatar');
-      const signOutBtn = document.getElementById('signOutBtn');
-      
-      try {
-        // Check for current session
-        const { data: { session }, error } = await supabase.auth.getSession();
+    function copyLink() {
+      const url = window.location.origin;
+      navigator.clipboard.writeText(url).then(() => {
+        // Temporarily change button text
+        const btn = event.target;
+        const originalText = btn.textContent;
+        btn.textContent = 'Copied!';
+        btn.style.background = '#4ADE80';
         
-        if (error) {
-          throw error;
-        }
-        
-        if (!session) {
-          // No session found, redirect to sign-in
-          window.location.href = 'signin.html';
-          return;
-        }
-        
-        // User is authenticated, display their info
-        const user = session.user;
-        
-        // Update UI with user info
-        userName.textContent = user.user_metadata.full_name || user.email;
-        
-        if (user.user_metadata.avatar_url) {
-          userAvatar.src = user.user_metadata.avatar_url;
-          userAvatar.style.display = 'block';
-        }
-        
-        // Hide loading and show content
-        loadingState.style.display = 'none';
-        accountContent.style.display = 'block';
-        
-        console.log('User authenticated:', user);
-        
-      } catch (error) {
-        console.error('Error loading account:', error);
-        
-        // Show error and redirect to sign-in
-        loadingState.innerHTML = `
-          <p>Error loading account: ${error.message}</p>
-          <a href="signin.html" class="btn">Try Signing In Again</a>
-        `;
-      }
-      
-      // Sign out functionality
-      signOutBtn.addEventListener('click', async function() {
-        try {
-          signOutBtn.disabled = true;
-          signOutBtn.textContent = 'Signing Out...';
-          
-          const { error } = await supabase.auth.signOut();
-          
-          if (error) {
-            throw error;
-          }
-          
-          // Redirect to home page
-          window.location.href = 'index.html';
-          
-        } catch (error) {
-          console.error('Error signing out:', error);
-          alert('Error signing out. Please try again.');
-          signOutBtn.disabled = false;
-          signOutBtn.textContent = 'Sign Out';
-        }
+        setTimeout(() => {
+          btn.textContent = originalText;
+          btn.style.background = '';
+        }, 2000);
+      }).catch(() => {
+        // Fallback for older browsers
+        alert(`Copy this link: ${url}`);
       });
-      
-      // Listen for auth state changes
-      supabase.auth.onAuthStateChange((event, session) => {
-        if (event === 'SIGNED_OUT') {
-          window.location.href = 'index.html';
-        }
-      });
-    });
+    }
+    
+    // Optional: Auto-redirect after some time
+    // setTimeout(() => {
+    //   window.location.href = 'index.html';
+    // }, 10000); // Redirect after 10 seconds
   </script>
 </body>
 </html>
