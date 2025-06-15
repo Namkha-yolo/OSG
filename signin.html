@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>OSG - Sign In</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     
@@ -181,7 +181,7 @@
       <p class="subtitle">Connect your GitHub account to access your gaming profile and track your open source achievements.</p>
       
       <button id="signInBtn" class="submit-btn">
-        <span class="github-icon"></span>
+        <span class="github-icon">📱</span>
         Sign In with GitHub
       </button>
       
@@ -205,27 +205,36 @@
     // Initialize Supabase
     let supabase;
     
-    // Wait for Supabase to load
-    document.addEventListener('DOMContentLoaded', function() {
-      console.log('Checking if Supabase is loaded...');
+    // Wait for page to load completely
+    window.addEventListener('load', function() {
+      console.log('Page loaded, checking Supabase...');
       
-      if (typeof supabaseJs === 'undefined') {
-        console.error('Supabase JS not loaded!');
-        document.getElementById('errorMessage').style.display = 'block';
-        document.getElementById('errorMessage').textContent = 'Authentication service not loaded. Please refresh the page.';
-        return;
-      }
-      
-      try {
-        supabase = supabaseJs.createClient('https://iyllmwimbslwpedfquxa.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml5bGxtd2ltYnNsd3BlZGZxdXhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk4NjgyNDMsImV4cCI6MjA2NTQ0NDI0M30.pKvm1kqK8Auy32wwPJcPhGqUDI9jzq8lSZvFdKpYnhg');
-        console.log('Supabase initialized successfully');
-      } catch (error) {
-        console.error('Supabase initialization failed:', error);
-        document.getElementById('errorMessage').style.display = 'block';
-        document.getElementById('errorMessage').textContent = 'Authentication service failed to initialize.';
-        return;
-      }
-      
+      // Wait a bit more for Supabase to load
+      setTimeout(() => {
+        if (typeof supabaseJs === 'undefined') {
+          console.error('Supabase JS not loaded!');
+          document.getElementById('errorMessage').style.display = 'block';
+          document.getElementById('errorMessage').textContent = 'Authentication service not loaded. Please refresh the page.';
+          return;
+        }
+        
+        try {
+          supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON);
+          console.log('Supabase initialized successfully');
+          
+          // Now set up the button
+          setupSignInButton();
+          
+        } catch (error) {
+          console.error('Supabase initialization failed:', error);
+          document.getElementById('errorMessage').style.display = 'block';
+          document.getElementById('errorMessage').textContent = 'Authentication service failed to initialize.';
+          return;
+        }
+      }, 500); // Wait 500ms for Supabase to load
+    });
+    
+    function setupSignInButton() {
       const signInBtn = document.getElementById('signInBtn');
       const loading = document.getElementById('loading');
       const errorMessage = document.getElementById('errorMessage');
@@ -265,6 +274,7 @@
           // OAuth should redirect automatically, but if we're still here after 5 seconds, show error
           setTimeout(() => {
             if (!window.location.href.includes('account.html')) {
+              console.error('OAuth redirect failed');
               throw new Error('OAuth redirect failed - check your Supabase GitHub app configuration');
             }
           }, 5000);
@@ -281,6 +291,8 @@
             errorText += 'Redirect configuration issue. Check your Supabase settings.';
           } else if (error.message.includes('OAuth')) {
             errorText += 'GitHub OAuth not configured. Set up GitHub app in Supabase.';
+          } else if (error.message.includes('Provider not found')) {
+            errorText += 'GitHub provider not enabled in Supabase Dashboard.';
           } else {
             errorText += error.message || 'Please try again.';
           }
@@ -312,7 +324,7 @@
           window.location.href = 'account.html';
         }
       });
-    });
+    }
   </script>
 </body>
 </html>
