@@ -225,44 +225,6 @@
       <p class="subtitle">
         Your GitHub OAuth integration needs to be configured in Supabase.
       </p>
-      
-      <div class="warning">
-        ⚠️ Backend configuration required before sign-in will work.
-      </div>
-      
-      <div class="setup-notice">
-        <div class="setup-title">🔧 Setup Required:</div>
-        <div class="setup-steps">
-          <ol>
-            <li><strong>Create GitHub OAuth App:</strong>
-              <br>• Go to GitHub → Settings → Developer Settings → OAuth Apps
-              <br>• Callback URL: <code>https://iyllmwimbslwpedfquxa.supabase.co/auth/v1/callback</code>
-            </li>
-            <li><strong>Configure Supabase:</strong>
-              <br>• Dashboard → Authentication → Providers → GitHub
-              <br>• Add your GitHub Client ID and Secret
-            </li>
-            <li><strong>Set Redirect URLs:</strong>
-              <br>• Add your site URL in Supabase URL Configuration
-              <br>• Add redirect URL: <code>your-domain.com/account.html</code>
-            </li>
-          </ol>
-        </div>
-      </div>
-      
-      <button id="signInBtn" class="submit-btn" disabled>
-        <span class="github-icon">⚙️</span>
-        Configuration Required
-      </button>
-      
-      <div class="config-code">
-        <strong>Quick Test Setup:</strong><br>
-        1. Replace SUPABASE_URL with your project URL<br>
-        2. Replace SUPABASE_ANON with your anon key<br>
-        3. Configure GitHub OAuth in Supabase dashboard<br>
-        4. Update redirect URLs
-      </div>
-      
       <a href="index.html" class="back-link">← Back to Home</a>
     </div>
   </div>
