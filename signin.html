@@ -181,7 +181,7 @@
       <p class="subtitle">Connect your GitHub account to access your gaming profile and track your open source achievements.</p>
       
       <button id="signInBtn" class="submit-btn">
-        <span class="github-icon">📱</span>
+        <span class="github-icon"></span>
         Sign In with GitHub
       </button>
       
@@ -239,7 +239,7 @@
           
           // Show loading state
           signInBtn.disabled = true;
-          signInBtn.innerHTML = '<span class="github-icon">'...'</span> Connecting...';
+          signInBtn.innerHTML = '<span class="github-icon">⏳</span> Connecting...';
           loading.style.display = 'block';
           
           console.log('Attempting GitHub OAuth...');
