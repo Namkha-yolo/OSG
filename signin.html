@@ -217,7 +217,7 @@
       }
       
       try {
-        supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON);
+        supabase = supabaseJs.createClient('https://iyllmwimbslwpedfquxa.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml5bGxtd2ltYnNsd3BlZGZxdXhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDk4NjgyNDMsImV4cCI6MjA2NTQ0NDI0M30.pKvm1kqK8Auy32wwPJcPhGqUDI9jzq8lSZvFdKpYnhg');
         console.log('Supabase initialized successfully');
       } catch (error) {
         console.error('Supabase initialization failed:', error);
@@ -239,7 +239,7 @@
           
           // Show loading state
           signInBtn.disabled = true;
-          signInBtn.innerHTML = '<span class="github-icon">⏳</span> Connecting...';
+          signInBtn.innerHTML = '<span class="github-icon">'...'</span> Connecting...';
           loading.style.display = 'block';
           
           console.log('Attempting GitHub OAuth...');
